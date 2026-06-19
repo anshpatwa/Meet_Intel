@@ -37,6 +37,26 @@ def _gemini_client():
     return genai.Client(api_key=config.GEMINI_API_KEY)
 
 
+def _generate_with_retry(client, *, tries: int = 6, **kwargs):
+    """Call generate_content, retrying transient Gemini 5xx (e.g. 503 "high demand").
+
+    Those overload errors are temporary, so retry with exponential backoff instead
+    of failing the whole run. Non-transient errors (bad request, auth) propagate.
+    """
+    import time
+    from google.genai import errors
+
+    for attempt in range(tries):
+        try:
+            return client.models.generate_content(**kwargs)
+        except errors.ServerError as e:          # 5xx incl. 503 "high demand"
+            if attempt == tries - 1:
+                raise
+            wait = 2 ** attempt                   # 1, 2, 4, 8, 16 s
+            print(f"[gemini] busy ({e}); retry {attempt + 1}/{tries} in {wait}s...", flush=True)
+            time.sleep(wait)
+
+
 def analyze_text(transcript: str, model: str | None = None) -> MeetingAnalysis:
     """Analyze a transcript and return a validated MeetingAnalysis."""
     if config.LLM_PROVIDER.lower() != "gemini":
@@ -46,7 +66,8 @@ def analyze_text(transcript: str, model: str | None = None) -> MeetingAnalysis:
     from google.genai import types
 
     client = _gemini_client()
-    resp = client.models.generate_content(
+    resp = _generate_with_retry(
+        client,
         model=model or config.LLM_MODEL,
         contents=f"Meeting transcript:\n\n{transcript}",
         config=types.GenerateContentConfig(
@@ -74,7 +95,8 @@ def _hinglish_chunk(text: str, model: str | None) -> str:
     from google.genai import types
 
     client = _gemini_client()
-    resp = client.models.generate_content(
+    resp = _generate_with_retry(
+        client,
         model=model or config.LLM_MODEL,
         contents=_HINGLISH_RULES + text,
         config=types.GenerateContentConfig(temperature=0.2, max_output_tokens=8192),
