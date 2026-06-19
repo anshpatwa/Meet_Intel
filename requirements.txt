@@ -1,0 +1,20 @@
+# --- Install PyTorch FIRST (GPU build), then this file ---
+# RTX 3050 / CUDA 12.x:
+#   pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
+# CPU only:
+#   pip install torch torchaudio
+
+# Day 1 - ingestion + captions
+whisperx>=3.1.1          # ASR + VAD + forced alignment (pulls faster-whisper, pyannote)
+faster-whisper>=1.0.0    # CTranslate2 Whisper backend
+ctranslate2>=4.0.0
+python-dotenv>=1.0.0     # read settings from .env
+yt-dlp>=2024.1.0         # optional: fetch a recording straight from a URL (YouTube, etc.)
+indic-transliteration>=2.3.0  # romanize Hindi (Devanagari) -> Hinglish (Latin)
+
+# Day 3 - LLM analysis (summary / topics / issues / resolved)
+google-genai>=1.0.0      # Gemini SDK (structured JSON output)
+pydantic>=2.0            # validated analysis schema
+
+# FFmpeg is a system dependency, not a pip package:
+#   winget install Gyan.FFmpeg     (already present on this machine)
