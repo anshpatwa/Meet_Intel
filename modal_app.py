@@ -29,8 +29,10 @@ image = (
     )
     .apt_install("ffmpeg", "git")
     .pip_install(
-        "torch", "torchaudio",
+        "numpy<2",               # torch 2.2.x needs NumPy 1.x ("Numpy is not available" otherwise)
+        "torch==2.4.1", "torchaudio==2.4.1",   # >=2.4 (transformers) and <2.8 (keeps torchaudio.AudioMetaData)
         "whisperx>=3.1.1",
+        "matplotlib",            # pyannote imports it at load time; not auto-installed
         "faster-whisper>=1.0.0",
         "ctranslate2==4.4.0",
         "google-genai>=1.0.0",
@@ -107,7 +109,8 @@ def web():
     async def process(file: UploadFile = File(...)):
         data = await file.read()
         try:
-            return JSONResponse(process_audio.remote(data, file.filename))
+            result = await process_audio.remote.aio(data, file.filename)
+            return JSONResponse(result)
         except Exception as e:  # surface a readable error to the UI
             return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
 
