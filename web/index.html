@@ -152,13 +152,25 @@
     setStatus(false);show(grid,'grid');show(reset,'block');
     if(isDemo){show(note,'block');note.textContent="Showing demo data — backend not connected yet.";}
   }
+  function showError(msg){
+    setStatus(false);
+    transcriptEl.textContent="";
+    analysisEl.innerHTML='<div class="lbl">SOMETHING WENT WRONG</div><p class="sum" style="color:#ff9a9a">'+esc(msg)+'</p>';
+    show(grid,'grid');show(reset,'block');
+  }
   function process(f){
     show(drop,'none');setStatus(true);show(grid,'none');show(note,'none');
     var fd=new FormData();fd.append('file',f);
     fetch('/process',{method:'POST',body:fd})
-      .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
-      .then(function(d){ if(d.error){throw new Error(d.error);} renderResult(d,false); })
-      .catch(function(){ setTimeout(function(){renderResult(SAMPLE,true);},1000); });
+      .then(function(r){return r.text().then(function(t){return {ok:r.ok,status:r.status,t:t};});})
+      .then(function(res){
+        var d=null; try{d=JSON.parse(res.t);}catch(e){}
+        if(d&&d.error){ showError(d.error); return; }
+        if(!res.ok){ showError("Server error "+res.status+": "+res.t.slice(0,400)); return; }
+        if(!d||!d.hinglish){ showError("Unexpected response from server."); return; }
+        renderResult(d,false);
+      })
+      .catch(function(e){ showError("Couldn't reach the backend ("+e.message+"). A long meeting can take a few minutes — if it timed out, try a shorter clip first."); });
   }
   drop.addEventListener('click',function(){file.click();});
   drop.addEventListener('dragover',function(e){e.preventDefault();drop.classList.add('hover');});
