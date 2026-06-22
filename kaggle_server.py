@@ -1,14 +1,13 @@
-"""Run the liquid-glass site on KAGGLE's GPU (free) instead of Modal.
+"""Run the liquid-glass site on KAGGLE's GPU.
 
-A tiny FastAPI server that serves web/index.html at "/" and runs the SAME src/
+A tiny FastAPI server that serves web/index.html at "/" and runs the src/
 pipeline (WhisperX large-v3 -> Gemini Hinglish -> Gemini analysis) at "/process",
 all on the Kaggle notebook's GPU. Expose it publicly with a tunnel (cloudflared) -
-see the run cell in the chat / README.
+see the run cell.
 
     uvicorn kaggle_server:app --host 127.0.0.1 --port 8000
 
-Note: this is only live while the Kaggle notebook is running. For an always-on
-public site, use the Modal deployment (modal_app.py) instead.
+Note: the public link is only live while the Kaggle notebook is running.
 """
 from __future__ import annotations
 
