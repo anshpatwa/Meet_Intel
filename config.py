@@ -73,5 +73,5 @@ NO_SPEECH_THRESHOLD = float(os.getenv("NO_SPEECH_THRESHOLD", "0.8"))
 
 # --- Step 4: LLM analysis (Day 3) ----------------------------------------
 LLM_PROVIDER = os.getenv("LLM_PROVIDER", "gemini")     # currently supported: gemini
-LLM_MODEL = os.getenv("LLM_MODEL", "gemini-2.5-flash")
+LLM_MODEL = os.getenv("LLM_MODEL", "gemini-2.0-flash")  # higher free-tier quota than 2.5-flash
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")       # free key: https://aistudio.google.com/apikey
