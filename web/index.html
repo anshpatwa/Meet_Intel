@@ -6,43 +6,42 @@
 <title>Meeting Intelligence — transcript & analysis</title>
 <style>
   :root{
-    --glass: rgba(255,255,255,0.10);
-    --glass-strong: rgba(255,255,255,0.16);
-    --stroke: rgba(255,255,255,0.22);
-    --text: #f4f6ff;
-    --muted: rgba(244,246,255,0.72);
-    --faint: rgba(244,246,255,0.55);
-    --accent: #16d0a3;
+    --bg-grad: linear-gradient(135deg,#3a2d6d 0%,#1f4b8f 48%,#0e6b6b 100%);
+    --text:#f4f6ff; --muted:rgba(244,246,255,0.72); --faint:rgba(244,246,255,0.55);
+    --glass: rgba(255,255,255,0.10); --glass-strong: rgba(255,255,255,0.16);
+    --stroke: rgba(255,255,255,0.22); --accent:#16d0a3; --ts:#ffd479; --blob:.5;
+  }
+  body.light{
+    --bg-grad: linear-gradient(135deg,#ece8ff 0%,#dcebfe 48%,#d8f6ee 100%);
+    --text:#161634; --muted:rgba(22,22,52,0.66); --faint:rgba(22,22,52,0.5);
+    --glass: rgba(255,255,255,0.55); --glass-strong: rgba(255,255,255,0.72);
+    --stroke: rgba(22,22,52,0.14); --accent:#0e9e80; --ts:#9a6200; --blob:.28;
   }
   *{box-sizing:border-box}
   html,body{margin:0;height:100%}
-  body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    color:var(--text);
-    background:#1b1740;
-    min-height:100vh;
-    overflow-x:hidden;
-  }
-  .bg{position:fixed;inset:0;z-index:0;background:linear-gradient(135deg,#3a2d6d 0%,#1f4b8f 48%,#0e6b6b 100%)}
-  .blob{position:fixed;border-radius:50%;filter:blur(90px);z-index:0;opacity:.5;animation:float 14s ease-in-out infinite}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--text);min-height:100vh;overflow-x:hidden}
+  .bg{position:fixed;inset:0;z-index:0;background:var(--bg-grad)}
+  .blob{position:fixed;border-radius:50%;filter:blur(90px);z-index:0;opacity:var(--blob);animation:float 14s ease-in-out infinite}
   .b1{width:420px;height:420px;left:-120px;top:-100px;background:#7c5cff}
   .b2{width:380px;height:380px;right:-100px;bottom:-120px;background:#16d0a3;animation-delay:-5s}
-  .b3{width:300px;height:300px;right:18%;top:-80px;background:#ff6fae;opacity:.35;animation-delay:-9s}
+  .b3{width:300px;height:300px;right:18%;top:-80px;background:#ff6fae;animation-delay:-9s}
   @keyframes float{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(30px) translateX(-20px)}}
   .wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:32px 20px 56px}
   header{display:flex;align-items:center;gap:12px;margin-bottom:26px}
   .logo{width:42px;height:42px;border-radius:12px;background:var(--glass-strong);border:1px solid var(--stroke);display:flex;align-items:center;justify-content:center;font-size:22px}
   header h1{font-size:20px;font-weight:600;margin:0;letter-spacing:.2px}
   header p{margin:2px 0 0;font-size:13px;color:var(--muted)}
-  .glass{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--stroke);border-radius:20px;box-shadow:0 10px 36px rgba(0,0,0,.20)}
+  .toggle{margin-left:auto;width:40px;height:40px;border-radius:50%;background:var(--glass);border:1px solid var(--stroke);color:var(--text);font-size:18px;cursor:pointer;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:background .2s}
+  .toggle:hover{background:var(--glass-strong)}
+  .glass{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--stroke);border-radius:20px;box-shadow:0 10px 36px rgba(0,0,0,.16)}
   .drop{padding:42px 24px;text-align:center;cursor:pointer;transition:background .2s,border-color .2s;border-style:dashed;border-width:1.5px;margin-bottom:22px}
-  .drop.hover{background:var(--glass-strong);border-color:rgba(255,255,255,.55)}
+  .drop.hover{background:var(--glass-strong)}
   .drop .ic{font-size:42px;opacity:.92}
-  .drop h2{font-size:18px;font-weight:600;margin:10px 0 4px}
+  .drop h2{font-size:18px;font-weight:600;margin:10px 0 4px;color:var(--text)}
   .drop p{margin:0;font-size:13px;color:var(--muted)}
   .pill{display:inline-block;margin-top:14px;padding:9px 18px;border-radius:999px;background:var(--accent);color:#04261d;font-weight:600;font-size:14px}
   .status{display:none;align-items:center;gap:14px;padding:20px 22px;margin-bottom:22px}
-  .spinner{width:26px;height:26px;border-radius:50%;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;animation:spin 1s linear infinite;flex:none}
+  .spinner{width:26px;height:26px;border-radius:50%;border:3px solid var(--stroke);border-top-color:var(--accent);animation:spin 1s linear infinite;flex:none}
   @keyframes spin{to{transform:rotate(360deg)}}
   .status .txt{font-size:15px}
   .status .sub{font-size:12px;color:var(--muted);margin-top:2px}
@@ -52,21 +51,20 @@
   .phead{display:flex;align-items:center;gap:8px;margin-bottom:14px}
   .phead .t{font-size:16px;font-weight:600}
   .tag{margin-left:auto;font-size:11px;background:var(--glass-strong);border:1px solid var(--stroke);padding:3px 10px;border-radius:999px;color:var(--text)}
-  .scroll{max-height:440px;overflow:auto;font-size:14px;line-height:1.75;color:rgba(244,246,255,.92);white-space:pre-wrap}
+  .scroll{max-height:440px;overflow:auto;font-size:14px;line-height:1.75;color:var(--text);white-space:pre-wrap}
   .lbl{font-size:11px;letter-spacing:.06em;color:var(--faint);margin:16px 0 6px}
   .lbl:first-child{margin-top:0}
-  .sum{color:rgba(244,246,255,.92);font-size:14px;line-height:1.6;margin:0}
+  .sum{color:var(--text);font-size:14px;line-height:1.6;margin:0}
   .chips{display:flex;flex-wrap:wrap;gap:7px}
-  .chip{font-size:12px;padding:4px 11px;border-radius:999px;background:var(--glass-strong);border:1px solid var(--stroke)}
-  .row{display:flex;gap:9px;align-items:flex-start;margin:7px 0;font-size:14px}
+  .chip{font-size:12px;padding:4px 11px;border-radius:999px;background:var(--glass-strong);border:1px solid var(--stroke);color:var(--text)}
+  .row{display:flex;gap:9px;align-items:flex-start;margin:7px 0;font-size:14px;color:var(--text)}
   .row .mk{flex:none;margin-top:1px}
   .ok{color:var(--accent)}
-  .open{color:#ffd479}
+  .open{color:var(--ts)}
   .meta{color:var(--faint);font-size:12px}
   .reset{display:none;margin:22px auto 0;padding:10px 20px;border-radius:999px;background:var(--glass-strong);border:1px solid var(--stroke);color:var(--text);font-size:14px;cursor:pointer}
-  .reset:hover{background:rgba(255,255,255,.24)}
+  .reset:hover{filter:brightness(1.1)}
   .note{display:none;margin:14px 0 0;font-size:12px;color:var(--muted);text-align:center}
-  a{color:#bfe9ff}
 </style>
 </head>
 <body>
@@ -78,6 +76,7 @@
         <h1>Meeting Intelligence</h1>
         <p>Drop a meeting. Get a Hinglish transcript and an analysis.</p>
       </div>
+      <button id="theme" class="toggle" aria-label="Toggle light or dark theme">&#9728;</button>
     </header>
 
     <div class="glass drop" id="drop">
@@ -110,6 +109,12 @@
 
 <script>
 (function(){
+  var body=document.body, tbtn=document.getElementById('theme');
+  function applyTheme(t){ if(t==='light'){body.classList.add('light');tbtn.innerHTML='&#9790;';} else {body.classList.remove('light');tbtn.innerHTML='&#9728;';} }
+  var saved='dark'; try{saved=localStorage.getItem('mi-theme')||'dark';}catch(e){}
+  applyTheme(saved);
+  tbtn.addEventListener('click',function(){ var t=body.classList.contains('light')?'dark':'light'; applyTheme(t); try{localStorage.setItem('mi-theme',t);}catch(e){} });
+
   var drop=document.getElementById('drop'), file=document.getElementById('file'),
       statusEl=document.getElementById('status'), statusTxt=document.getElementById('statusTxt'),
       statusSub=document.getElementById('statusSub'), grid=document.getElementById('grid'),
@@ -118,54 +123,43 @@
 
   var STEPS=["Uploading file…","Transcribing on GPU (Whisper large-v3)…","Romanizing to Hinglish (Gemini)…","Analyzing the meeting (Gemini)…"];
   var stepTimer=null;
-
   var SAMPLE={
     hinglish:"[00:02] Haan to aaj ka standup shuru karte hain, pehle backend update.\n[00:11] Maine API ka authentication wala part complete kar diya, deploy bhi ho gaya.\n[00:24] Frontend pe issue tha, dark mode mein button dikh nahi raha tha — ab fix hai.\n[00:39] Deadline Friday hai, to testing kal tak finish karni hai.\n[00:51] Theek hai, main QA ko aaj hi handover kar deta hoon.",
-    analysis:{title:"Daily engineering standup",summary:"Quick standup: backend authentication was shipped and deployed, a dark-mode UI bug was fixed, and testing must be completed before Friday's deadline.",topics:["Backend / authentication","Frontend dark-mode bug","Testing & deadline"],issues:[{title:"Dark-mode button invisible",detail:"A button was not visible in dark mode on the frontend.",resolved:true,resolution:"Fixed during the sprint."},{title:"Testing not finished",detail:"Testing must wrap before the Friday deadline.",resolved:false,resolution:""}],decisions:["Hand the build over to QA today"],action_items:[{task:"Finish testing",owner:"",due:"by Thursday"},{task:"Hand over build to QA",owner:"",due:"today"}],participants:[]}
+    analysis:{title:"Daily engineering standup",summary:"Quick standup: backend authentication was shipped and deployed, a dark-mode UI bug was fixed, and testing must be completed before Friday's deadline.",topics:["Backend / auth","Frontend bug","Deadline"],issues:[{title:"Dark-mode button invisible",detail:"",resolved:true,resolution:"Fixed during the sprint."},{title:"Testing not finished",detail:"",resolved:false,resolution:""}],decisions:["Hand the build over to QA today"],action_items:[{task:"Finish testing",owner:"",due:"by Thursday"},{task:"Hand over build to QA",owner:"",due:"today"}],participants:[]}
   };
 
   function show(el,disp){el.style.display=disp;}
   function esc(s){return (s||"").replace(/[&<>]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c];});}
-
   function setStatus(on){
     if(on){show(statusEl,'flex');var i=0;statusTxt.textContent=STEPS[0];statusSub.textContent="This can take a minute on the first run.";
       stepTimer=setInterval(function(){i=Math.min(i+1,STEPS.length-1);statusTxt.textContent=STEPS[i];},9000);}
     else{show(statusEl,'none');clearInterval(stepTimer);}
   }
-
   function renderAnalysis(a){
     var h="";
     if(a.title){h+='<div class="lbl">TITLE</div><p class="sum" style="font-weight:600">'+esc(a.title)+'</p>';}
     if(a.summary){h+='<div class="lbl">SUMMARY</div><p class="sum">'+esc(a.summary)+'</p>';}
     if(a.topics&&a.topics.length){h+='<div class="lbl">TOPICS</div><div class="chips">'+a.topics.map(function(t){return '<span class="chip">'+esc(t)+'</span>';}).join('')+'</div>';}
-    if(a.action_items&&a.action_items.length){h+='<div class="lbl">ACTION ITEMS</div>'+a.action_items.map(function(it){
-      var m=[it.owner,it.due].filter(Boolean).map(esc).join(' · ');
-      return '<div class="row"><span class="mk">&#9744;</span><span>'+esc(it.task)+(m?' <span class="meta">('+m+')</span>':'')+'</span></div>';}).join('');}
-    if(a.issues&&a.issues.length){h+='<div class="lbl">ISSUES</div>'+a.issues.map(function(is){
-      var icon=is.resolved?'<span class="mk ok">&#10003;</span>':'<span class="mk open">&#9679;</span>';
-      var res=is.resolved&&is.resolution?' <span class="meta">— '+esc(is.resolution)+'</span>':'';
-      return '<div class="row">'+icon+'<span>'+esc(is.title)+res+'</span></div>';}).join('');}
+    if(a.action_items&&a.action_items.length){h+='<div class="lbl">ACTION ITEMS</div>'+a.action_items.map(function(it){var m=[it.owner,it.due].filter(Boolean).map(esc).join(' · ');return '<div class="row"><span class="mk">&#9744;</span><span>'+esc(it.task)+(m?' <span class="meta">('+m+')</span>':'')+'</span></div>';}).join('');}
+    if(a.issues&&a.issues.length){h+='<div class="lbl">ISSUES</div>'+a.issues.map(function(is){var icon=is.resolved?'<span class="mk ok">&#10003;</span>':'<span class="mk open">&#9679;</span>';var res=is.resolved&&is.resolution?' <span class="meta">— '+esc(is.resolution)+'</span>':'';return '<div class="row">'+icon+'<span>'+esc(is.title)+res+'</span></div>';}).join('');}
     if(a.decisions&&a.decisions.length){h+='<div class="lbl">DECISIONS</div>'+a.decisions.map(function(d){return '<div class="row"><span class="mk ok">&#9656;</span><span>'+esc(d)+'</span></div>';}).join('');}
     if(a.participants&&a.participants.length){h+='<div class="lbl">PARTICIPANTS</div><div class="chips">'+a.participants.map(function(p){return '<span class="chip">'+esc(p)+'</span>';}).join('')+'</div>';}
     analysisEl.innerHTML=h||'<p class="sum">No analysis returned.</p>';
   }
-
   function renderResult(data,isDemo){
     transcriptEl.textContent=data.hinglish||"(no transcript)";
     renderAnalysis(data.analysis||{});
     setStatus(false);show(grid,'grid');show(reset,'block');
     if(isDemo){show(note,'block');note.textContent="Showing demo data — backend not connected yet.";}
   }
-
   function process(f){
     show(drop,'none');setStatus(true);show(grid,'none');show(note,'none');
     var fd=new FormData();fd.append('file',f);
     fetch('/process',{method:'POST',body:fd})
       .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
-      .then(function(d){renderResult(d,false);})
-      .catch(function(){ setTimeout(function(){renderResult(SAMPLE,true);},1200); });
+      .then(function(d){ if(d.error){throw new Error(d.error);} renderResult(d,false); })
+      .catch(function(){ setTimeout(function(){renderResult(SAMPLE,true);},1000); });
   }
-
   drop.addEventListener('click',function(){file.click();});
   drop.addEventListener('dragover',function(e){e.preventDefault();drop.classList.add('hover');});
   drop.addEventListener('dragleave',function(){drop.classList.remove('hover');});
